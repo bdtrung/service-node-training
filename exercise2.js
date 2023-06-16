@@ -22,8 +22,6 @@ const filterComments = (postId) => {
     return commentData.map(comment => comment)
 }
 
-// console.log(filterComments(1))
-
 const getResult = getUsers.map(user => {
     let comments = [];
     const postData = filterPosts(user.id);
