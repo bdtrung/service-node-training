@@ -1,50 +1,37 @@
-import fetch from 'node-fetch';
+import getData from './getData.js';
 
-const getData = async (type) => {
-    const response = await fetch(`https://jsonplaceholder.typicode.com/${type}`);
-
-    return await response.json();
-}
-
-const getUsers = await getData('users');
-const getPosts = await getData('posts');
-const getComments = await getData('comments');
+const [
+    users,
+    posts,
+    comments
+] = await Promise.all([
+    getData('users'),
+    getData('posts'),
+    getData('comments')
+]);
 
 const filterPosts = (userId) => {
-    const postData = getPosts.filter(data => data.userId === userId);
-
-    return postData.map(post => post)
+    return posts.filter(data => data.userId === userId);
 }
 
-const filterComments = (postId) => {
-    const commentData = getComments.filter(data => data.postId === postId);
-
-    return commentData.map(comment => comment)
+const filterComments = (email) => {
+    return comments.filter(data => data.email === email);
 }
 
-const getResult = getUsers.map(user => {
-    let comments = [];
-    const postData = filterPosts(user.id);
-    postData.map(post => {
-        comments = [
-            ...comments,
-            ...filterComments(post.id)
-        ]
-    })
-
+const userFormat = users.map(user => {
     return {
         id: user.id,
         name: user.name,
         username: user.username,
         email: user.email,
-        comments: comments,
-        posts: postData
+        comments: filterComments(user.email),
+        posts: filterPosts(user.id)
     }
 })
 
-const userMoreThanThreeComment = getResult.filter(user => user.comments.length > 3)
+const userMoreThanThreeComment = userFormat.filter(user => user.comments.length > 3)
 
-const reformatUsersData = getResult.map(userData => {
+const reformatUsersData = userFormat.map(userData => {
     const {comments, posts, ...newData} = userData;
 
     return {
@@ -54,20 +41,20 @@ const reformatUsersData = getResult.map(userData => {
     }
 })
 
-const mostPostsUser = getResult.reduce((accumulator, currentValue) => {
+const mostPostsUser = userFormat.reduce((accumulator, currentValue) => {
     return accumulator.postsCount > currentValue.postsCount ?  accumulator : currentValue
 })
 
-const mostCommentsUser = getResult.reduce((accumulator, currentValue) => {
+const mostCommentsUser = userFormat.reduce((accumulator, currentValue) => {
     return accumulator.commentsCount > currentValue.commentsCount ?  accumulator : currentValue
 })
 
 const sortByPostsCount = reformatUsersData.sort((a, b) => (a.postsCount > b.postsCount ? -1 : 0))
 
-const getPostDataId = async () => {
+const getPostDataId = async (id) => {
     const [post, comments] = await Promise.all([
-        getData('posts/1'),
-        getData('comments?postId=1')
+        getData(`posts/${id}`),
+        getData(`comments?postId=${id}`)
     ]);
 
     return {
@@ -77,10 +64,10 @@ const getPostDataId = async () => {
 }
 
 //requirement 2
-// console.dir(getUsers, {depth: null})
+// console.dir(users, {depth: null})
 
 //requirement 3
-// console.dir(getResult, {depth: null})
+// console.dir(userFormat, {depth: null})
 
 //requirement 4
 // console.dir(userMoreThanThreeComment, {depth: null})
