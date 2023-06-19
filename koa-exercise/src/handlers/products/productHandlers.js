@@ -2,7 +2,21 @@ const {getAll: getAllProducts, getOne: getOneProduct, add: addProduct, remove: r
 
 async function getProducts (ctx) {
     try {
-        const products = getAllProducts();
+        let products = getAllProducts();
+        const limit = ctx.query.limit;
+        const sort = ctx.query.sort;
+
+        if (limit) {
+            products = products.slice(0, limit)
+        }
+
+        if (sort === 'asc') {
+            products.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
+        }
+
+        if (sort === 'desc') {
+            products.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+        }
 
         ctx.body = {
             data: products
@@ -44,6 +58,7 @@ async function getProduct (ctx) {
 async function save(ctx) {
     try {
         const postData = ctx.request.body;
+        postData.createdAt = new Date();
         addProduct(postData);
 
         ctx.status = 201;
@@ -62,7 +77,7 @@ async function deleteProduct(ctx) {
     try {
         const {id} = ctx.params;
         const productDelete = removeProduct(id);
-
+        console.log(productDelete)
         if (productDelete) {
             return ctx.body = {
                 success: true,
