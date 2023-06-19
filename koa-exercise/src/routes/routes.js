@@ -6,10 +6,10 @@ const router = new Router({
     prefix: '/api'
 });
 
-router.get('/product', bookHandler.getProducts);
-router.get('/product/:id', bookHandler.getProduct);
-router.put('/product/:id', productInputMiddleware, bookHandler.save);
-router.delete('/product/:id', bookHandler.getProduct);
+router.get('/products', productHandler.getProducts);
+router.get('/product/:id', productHandler.getProduct);
+router.put('/product/:id', productInputMiddleware, productHandler.save);
+router.delete('/product/:id', productHandler.deleteProduct);
 router.post('/products', productInputMiddleware, productHandler.save);
 
 module.exports = router;

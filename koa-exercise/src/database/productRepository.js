@@ -10,19 +10,31 @@ function getOne(id) {
 }
 
 function add(data) {
-    const updateProducts = [data, ...books];
+    const updateProducts = [data, ...products];
 
     return fs.writeFileSync('./src/database/product.json', JSON.stringify({
         data: updateProducts
     }))
 }
 
-function delete(id) {
-    const deleteProduct = products.find(product => product.id === parseInt(id));
+function remove(id) {
+    let deleteProduct, updateProduct;
+    deleteProduct = products.find(product => product.id === parseInt(id));
+
+    if (deleteProduct) {
+        [deleteProduct, ...updateProducts] = products;
+        return fs.writeFileSync('./src/database/product.json', JSON.stringify({
+            data: updateProducts
+        }))
+    }
+
+    return false;
 }
+
 
 module.exports = {
     getAll,
     getOne,
-    add
+    add,
+    remove
 }
