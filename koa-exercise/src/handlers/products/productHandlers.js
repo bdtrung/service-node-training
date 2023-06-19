@@ -1,4 +1,4 @@
-const {getAll: getAllProducts, getOne: getOneProduct, add: addProduct, remove: removeProduct} = require('../../database/productRepository');
+const {getAll: getAllProducts, getOne: getOneProduct, add: addProduct, remove: removeProduct, saveProduct: saveProduct} = require('../../database/productRepository');
 
 async function getProducts (ctx) {
     try {
@@ -34,11 +34,21 @@ async function getProducts (ctx) {
 async function getProduct (ctx) {
     try {
         const {id} = ctx.params;
-        const getCurrentProduct = getOneProduct(id);
+        const fields = ctx.query.fields;
+        const currentProduct = getOneProduct(id);
 
-        if (getCurrentProduct) {
+        if (fields) {
+            const arrFields = fields.split(',');
+            const newObjProduct = Object.fromEntries(arrFields.map((field) => [field, currentProduct[field]]));
+
             return ctx.body = {
-                data: getCurrentProduct
+                data: newObjProduct
+            }
+        }
+
+        if (currentProduct) {
+            return ctx.body = {
+                data: currentProduct
             }
         }
 
@@ -73,11 +83,29 @@ async function save(ctx) {
     }
 }
 
+async function updateProduct(ctx) {
+    try {
+        const {id} = ctx.params;
+        const postData = ctx.request.body;
+        saveProduct(id, postData);
+
+        ctx.status = 201;
+        return ctx.body = {
+            success: true
+        }
+    } catch (e) {
+        return ctx.body = {
+            success: false,
+            error: e.message
+        }
+    }
+}
+
 async function deleteProduct(ctx) {
     try {
         const {id} = ctx.params;
         const productDelete = removeProduct(id);
-        console.log(productDelete)
+
         if (productDelete) {
             return ctx.body = {
                 success: true,
@@ -103,5 +131,6 @@ module.exports = {
     getProducts,
     getProduct,
     save,
-    deleteProduct
+    deleteProduct,
+    updateProduct
 }

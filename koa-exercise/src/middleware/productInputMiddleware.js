@@ -16,7 +16,7 @@ async function productInputMiddleware (ctx, next) {
         });
 
         await schema.validate(postData);
-
+        next()
     } catch (e) {
         ctx.status = 400;
         ctx.body = {
@@ -27,4 +27,29 @@ async function productInputMiddleware (ctx, next) {
     }
 }
 
-module.exports = productInputMiddleware;
+async function productInputUpdateMiddleware (ctx, next) {
+    try {
+        const postData = ctx.request.body;
+
+        let schema = yup.object().shape({
+            name: yup.string(),
+            price: yup.number().round(),
+            description: yup.string(),
+            product: yup.string(),
+            color: yup.string(),
+            image: yup.string().url()
+        });
+
+        await schema.validate(postData);
+        next()
+    } catch (e) {
+        ctx.status = 400;
+        ctx.body = {
+            success: false,
+            errors: e.errors,
+            errorName: e.name
+        }
+    }
+}
+
+module.exports = {productInputMiddleware, productInputUpdateMiddleware};

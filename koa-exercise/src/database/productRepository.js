@@ -18,17 +18,27 @@ function add(data) {
 }
 
 function remove(id) {
-    let deleteProduct, updateProduct;
-    deleteProduct = products.find(product => product.id === parseInt(id));
+    const deleteProduct = products.find(product => product.id === parseInt(id));
 
     if (deleteProduct) {
-        [deleteProduct, ...updateProducts] = products;
-        return fs.writeFileSync('./src/database/product.json', JSON.stringify({
-            data: updateProducts
+        const updatedProducts = products.filter(product => product.id !== parseInt(id));
+
+        fs.writeFileSync('./src/database/product.json', JSON.stringify({
+            data: updatedProducts
         }))
+
+        return true;
     }
 
     return false;
+}
+
+function saveProduct(id, data) {
+    const updateProducts = products.map(product => [data].find(dataUpdate => dataUpdate.id === product.id) || product);
+
+    return fs.writeFileSync('./src/database/product.json', JSON.stringify({
+        data: updateProducts
+    }))
 }
 
 
@@ -36,5 +46,6 @@ module.exports = {
     getAll,
     getOne,
     add,
-    remove
+    remove,
+    saveProduct
 }

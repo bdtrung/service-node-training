@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const productHandler = require('../handlers/products/productHandlers');
-const productInputMiddleware = require('../middleware/productInputMiddleware');
+const {productInputMiddleware, productInputUpdateMiddleware} = require('../middleware/productInputMiddleware.js');
 
 const router = new Router({
     prefix: '/api'
@@ -8,8 +8,8 @@ const router = new Router({
 
 router.get('/products', productHandler.getProducts);
 router.get('/product/:id', productHandler.getProduct);
-router.put('/product/:id', productInputMiddleware, productHandler.save);
+router.put('/product/:id', productInputUpdateMiddleware, productHandler.updateProduct);
 router.delete('/product/:id', productHandler.deleteProduct);
-router.post('/products', productHandler.save);
+router.post('/products', productInputMiddleware, productHandler.save);
 
 module.exports = router;
