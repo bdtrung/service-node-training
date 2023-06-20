@@ -6,16 +6,15 @@ async function getProducts (ctx) {
         const limit = ctx.query.limit;
         const sort = ctx.query.sort;
 
-        if (limit) {
-            products = products.slice(0, limit)
-        }
-
         if (sort === 'asc') {
             products.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
         }
 
         if (sort === 'desc') {
             products.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+        }
+        if (limit) {
+            products = products.slice(0, limit)
         }
 
         ctx.body = {
