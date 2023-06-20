@@ -13,6 +13,7 @@
   "dependencies": {
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
+    "koa-ejs": "^4.3.0",
     "koa-router": "^10.0.0",
     "yup": "^1.2.0"
   },
