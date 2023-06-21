@@ -1,1 +1,4 @@
 /node_modules/
+/package-lock.json
+/learning-koajs/node_modules/
+/koa-exercise/node_modules/
