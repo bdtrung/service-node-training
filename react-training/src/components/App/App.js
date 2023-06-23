@@ -13,7 +13,7 @@ function App() {
       const usersData = await res.json();
 
       setUsers(usersData);
-      setLoading(false)
+      setLoading(false);
       setFeatched(true);
     } catch (e) {
       console.error(e)

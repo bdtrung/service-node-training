@@ -1,14 +1,16 @@
 import './App.css';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Todo from '../Todo/Todo';
 import TodoForm from '../TodoForm/TodoForm';
 
 function App() {
-  const [todos, setTodos] = React.useState([
-    { text: "Learn about React", isCompleted: false },
-    { text: "Meet friend for lunch", isCompleted: false },
-    { text: "Build really cool todo app", isCompleted: false }
-  ]);
+  const [todos, setTodos] = React.useState([]);
+    async function fetchUsers () {
+        const res = await fetch('http://localhost:3001/api/products?limit=10');
+        const usersData = await res.json();
+
+        setTodos(usersData.data);
+    }
 
     const addTodo = text => {
         const newTodos = [...todos, { text }];
@@ -26,6 +28,10 @@ function App() {
         newTodos.splice(index, 1);
         setTodos(newTodos);
     };
+
+    useEffect(() => {
+        fetchUsers()
+    }, [])
 
   return (
       <div className="app">
