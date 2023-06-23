@@ -29,6 +29,12 @@ function App() {
         setTodos(newTodos);
     };
 
+    async function deleteUser (id) {
+        const res = await fetch(`http://localhost:3001/api/products/${id}`);
+
+        setTodos()
+    }
+
     useEffect(() => {
         fetchUsers()
     }, [])
