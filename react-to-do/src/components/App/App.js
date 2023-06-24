@@ -17,9 +17,9 @@ function App() {
         setTodos(newTodos);
     };
 
-    const completeTodo = index => {
+    const completeTodo = id => {
         const newTodos = [...todos];
-        newTodos[index].isCompleted = true;
+        newTodos[id].isCompleted = true;
         setTodos(newTodos);
     };
 
@@ -29,15 +29,9 @@ function App() {
         setTodos(newTodos);
     };
 
-    async function deleteUser (id) {
-        const res = await fetch(`http://localhost:3001/api/products/${id}`);
-
-        setTodos()
-    }
-
     useEffect(() => {
         fetchUsers()
-    }, [])
+    }, []);
 
   return (
       <div className="app">
