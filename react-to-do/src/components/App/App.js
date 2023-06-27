@@ -2,6 +2,13 @@ import './App.css';
 import React, {useEffect} from 'react';
 import Todo from '../Todo/Todo';
 import TodoForm from '../TodoForm/TodoForm';
+import SimpleIndexTableExample from "../Table/Table";
+import "@shopify/polaris/build/esm/styles.css";
+import ResourceListWithSelectionExample from "../ResourceList/ResourceList";
+import {
+    AppProvider
+} from '@shopify/polaris';
+import HorizontalGridWithVaryingGapExample from "../LayoutGrid/LayoutGrid";
 
 function App() {
   const [todos, setTodos] = React.useState([]);
@@ -34,20 +41,28 @@ function App() {
     }, []);
 
   return (
+<AppProvider>
       <div className="app">
         <div className="todo-list">
-          {todos.map((todo, index) => (
-              <Todo
-                  key={index}
-                  index={index}
-                  todo={todo}
-                  completeTodo={completeTodo}
-                  removeTodo={removeTodo}
-              />
-          ))}
-            <TodoForm addTodo={addTodo} />
+            {/*<SimpleIndexTableExample todos={todos}/>*/}
+            <ResourceListWithSelectionExample todos={todos}/>
+            <HorizontalGridWithVaryingGapExample>
+
+            </HorizontalGridWithVaryingGapExample>
+          {/*{todos.map((todo, index) => (*/}
+          {/*    <Todo*/}
+          {/*        key={index}*/}
+          {/*        index={index}*/}
+          {/*        todo={todo}*/}
+          {/*        completeTodo={completeTodo}*/}
+          {/*        removeTodo={removeTodo}*/}
+          {/*    />*/}
+          {/*))}*/}
+          {/*  <TodoForm addTodo={addTodo} />*/}
         </div>
+
       </div>
+    </AppProvider>
   );
 }
 
